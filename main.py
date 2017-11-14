@@ -49,7 +49,7 @@ BujneFutro.insertLeft(kotPerski)
 BujneFutro.insertRight(kotSyjamski)
 
 #FUZZY
-SkladaneDuzeJaja = TreeNode("Czy składane jaj są dużę?", Fuzziness.LINEAR)
+SkladaneDuzeJaja = TreeNode("Czy składane jaja są duże?", Fuzziness.LINEAR)
 SkladaneDuzeJaja.insertLeft(strus)
 SkladaneDuzeJaja.insertRight(kura)
 
@@ -210,7 +210,12 @@ while len(ToCheck) != 0:
         print(CurrentQuestion.getEtiquette())
         question = CurrentQuestion.getQuestions()
         print(question[0])
-        answer = int(input("Podaj odpowiedź"))
+
+
+        try:
+            answer = int(input("Podaj odpowiedź"))
+        except ValueError:
+            continue
 
         if answer not in question[1]:
             break
