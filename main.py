@@ -211,9 +211,8 @@ while len(ToCheck) != 0:
         question = CurrentQuestion.getQuestions()
         print(question[0])
 
-
         try:
-            answer = int(input("Podaj odpowiedź"))
+            answer = int(input("Podaj odpowiedź: "))
         except ValueError:
             continue
 
