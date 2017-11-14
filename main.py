@@ -3,9 +3,9 @@ from Fuzziness import *
 
 gepard = TreeNode("Gepard", Fuzziness.LEAF)
 lew = TreeNode("Lew", Fuzziness.LEAF)
-tygrysBengalski = TreeNode("TygrysBengalski", Fuzziness.LEAF)
-kotPerski = TreeNode("KotPerski", Fuzziness.LEAF)
-kotSyjamski = TreeNode("KotSyjamski", Fuzziness.LEAF)
+tygrysBengalski = TreeNode("Tygrys Bengalski", Fuzziness.LEAF)
+kotPerski = TreeNode("Kot Perski", Fuzziness.LEAF)
+kotSyjamski = TreeNode("Kot Syjamski", Fuzziness.LEAF)
 dachowiec = TreeNode("Dachowiec", Fuzziness.LEAF)
 rys = TreeNode("Ryś", Fuzziness.LEAF)
 kangur = TreeNode("Kangur", Fuzziness.LEAF)
@@ -18,8 +18,8 @@ jelen = TreeNode("Jeleń", Fuzziness.LEAF)
 sokol = TreeNode("Sokół", Fuzziness.LEAF)
 orzel = TreeNode("Orzeł", Fuzziness.LEAF)
 wrobel = TreeNode("Wróbel", Fuzziness.LEAF)
-pingwinRownikowy = TreeNode("PingwinRownikowy", Fuzziness.LEAF)
-pingwinCesarski = TreeNode("PingwinCesarski", Fuzziness.LEAF)
+pingwinRownikowy = TreeNode("Pingwin Rownikowy", Fuzziness.LEAF)
+pingwinCesarski = TreeNode("Pingwin Cesarski", Fuzziness.LEAF)
 strus = TreeNode("Struś", Fuzziness.LEAF)
 kura = TreeNode("Kura", Fuzziness.LEAF)
 kiwi = TreeNode("Kiwi", Fuzziness.LEAF)
@@ -34,7 +34,7 @@ kameleon = TreeNode("Kameleon", Fuzziness.LEAF)
 waz = TreeNode("Waz", Fuzziness.LEAF)
 pterozaur = TreeNode("Pterozaur", Fuzziness.LEAF)
 triceratops = TreeNode("Triceratops", Fuzziness.LEAF)
-salamandraPlamista = TreeNode("SalamandraPlamista", Fuzziness.LEAF)
+salamandraPlamista = TreeNode("Salamandra Plamista", Fuzziness.LEAF)
 zaba = TreeNode("Zaba", Fuzziness.LEAF)
 biedronka = TreeNode("Biedronka", Fuzziness.LEAF)
 
@@ -192,6 +192,8 @@ Ssak = TreeNode("Czy jest ssakiem?", Fuzziness.NO)
 Ssak.insertLeft(Kot)
 Ssak.insertRight(Ptak)
 
+Results = []
+
 ToCheck = []
 ToCheck.append(Ssak)
 
@@ -199,7 +201,10 @@ while len(ToCheck) != 0:
     CurrentQuestion = ToCheck.pop()
     while True:
         if CurrentQuestion.getLeftChild() is None and CurrentQuestion.getRightChild() is None:
-            print("Odpowiedź: {0}".format(CurrentQuestion.getEtiquette()))
+            NewAnswer = "Odpowiedź: {0}, rate: {1}".format(CurrentQuestion.getEtiquette(),
+                                                     CurrentQuestion.getRate())
+            Results.append(NewAnswer)
+            print(NewAnswer)
             break
 
         print(CurrentQuestion.getEtiquette())
@@ -212,13 +217,24 @@ while len(ToCheck) != 0:
         else:
             print(question[2][answer-1])
 
-        if question[2][answer-1] > 50:
-            if question[2][answer-1] != 100 and not CurrentQuestion.getRightChild() is None:
+        leftProbability = question[2][answer-1]
+
+        CurrentQuestion.getLeftChild().setRate(
+            min(leftProbability, CurrentQuestion.getRate()))
+        CurrentQuestion.getRightChild().setRate(
+            min(100 - leftProbability, CurrentQuestion.getRate()))
+
+        if leftProbability > 50:
+            if leftProbability != 100 and not CurrentQuestion.getRightChild() is None:
                 print("Do sprawdzenia: ", CurrentQuestion.getRightChild().getEtiquette())
                 ToCheck.append(CurrentQuestion.getRightChild())
             CurrentQuestion = CurrentQuestion.getLeftChild()
         else:
-            if question[2][answer-1] != 0 and not CurrentQuestion.getLeftChild() is None:
-                print("Do sprawdzenia: ", CurrentQuestion.getLefttChild().getEtiquette())
+            if leftProbability != 0 and not CurrentQuestion.getLeftChild() is None:
+                print("Do sprawdzenia: ", CurrentQuestion.getLeftChild().getEtiquette())
                 ToCheck.append(CurrentQuestion.getLeftChild())
             CurrentQuestion = CurrentQuestion.getRightChild()
+
+print("\n\nFINAL RESULTS: ")
+for line in Results:
+    print(line)

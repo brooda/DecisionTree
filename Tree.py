@@ -10,6 +10,7 @@ class TreeNode():
         self.left = None
         self.right = None
         self.fuzziness = fuzziness
+        self.rate = 100
 
     def getEtiquette(self):
         return self.etiquette;
@@ -40,11 +41,17 @@ class TreeNode():
             return ("na pewno nie: 1, raczej nie: 2, nie wiem: 3, raczej tak: 4, na pewno tak: 5", [1, 2, 3, 4, 5],
                     [0, 25, 50, 75, 100])
         elif self.fuzziness == Fuzziness.SIGMOIDAL:
-            return ("Na pewno tak: 100, na pewno nie: 1", list(reversed((1, 101))),
+            return ("Na pewno tak: 100, na pewno nie: 1", list(reversed(range(1, 101))),
                     sigmoid())
         else:
             return ("Tak: 2, nie: 1", [1,2],
                     [0, 100])
+
+    def setRate(self, rate):
+        self.rate = rate
+
+    def getRate(self):
+        return self.rate
 
 def printTree(tree):
     if tree != None:
@@ -54,7 +61,7 @@ def printTree(tree):
 
 
 def sigmoid():
-    ret = list(1 / (1 + np.exp(-np.arange(100) / 10 + 5)))
+    ret = [int(x) for x in list(np.round(100 / (1 + np.exp(-np.arange(100) / 10 + 5)), 0))]
     ret[0] = 0
     ret[-1] = 1
     return ret
