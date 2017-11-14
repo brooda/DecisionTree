@@ -2,13 +2,14 @@
 # in this implementation, a node is inserted between an existing node and the root
 
 from Fuzziness import *
+import numpy as np
 
 class TreeNode():
     def __init__(self, etiquette, fuzziness):
         self.etiquette = etiquette
         self.left = None
         self.right = None
-        self.fizzuness = fuzziness
+        self.fuzziness = fuzziness
 
     def getEtiquette(self):
         return self.etiquette;
@@ -20,23 +21,40 @@ class TreeNode():
 
     def insertRight(self,newNode):
         if self.right == None:
-            self.right = TreeNode(newNode)
+            self.right = newNode
         else:
-            tree = TreeNode(newNode)
+            tree = newNode
             tree.right = self.right
             self.right = tree
 
     def insertLeft(self,newNode):
         if self.left == None:
-            self.left = TreeNode(newNode)
+            self.left = newNode
         else:
-            tree = TreeNode(newNode)
+            tree = newNode
             tree.left = self.left
             self.left = tree
 
+    def getQuestions(self):
+        if self.fuzziness == Fuzziness.LINEAR:
+            return ("na pewno nie: 1, raczej nie: 2, nie wiem: 3, raczej tak: 4, na pewno tak: 5", [1, 2, 3, 4, 5],
+                    [0, 25, 50, 75, 100])
+        elif self.fuzziness == Fuzziness.SIGMOIDAL:
+            return ("Na pewno tak: 100, na pewno nie: 1", list(reversed((1, 101))),
+                    sigmoid())
+        else:
+            return ("Tak: 2, nie: 1", [1,2],
+                    [0, 100])
 
 def printTree(tree):
     if tree != None:
         printTree(tree.getLeftChild())
         print(tree.getEtiquette())
         printTree(tree.getRightChild())
+
+
+def sigmoid():
+    ret = list(1 / (1 + np.exp(-np.arange(100) / 10 + 5)))
+    ret[0] = 0
+    ret[-1] = 1
+    return ret

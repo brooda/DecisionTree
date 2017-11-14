@@ -87,7 +87,7 @@ UtrzymanieKoszutje.insertLeft(BujneFutro)
 UtrzymanieKoszutje.insertRight(dachowiec)
 
 #FUZZY
-Programuje = TreeNode("Czy umie programować?", Fuzziness.LINEAR)
+Programuje = TreeNode("Czy umie programować?", Fuzziness.SIGMOIDAL)
 Programuje.insertLeft(czlowiek)
 Programuje.insertRight(szympans)
 
@@ -109,7 +109,7 @@ PolkulaPolnoca.insertLeft(pingwinRownikowy)
 PolkulaPolnoca.insertRight(pingwinCesarski)
 
 #FUZZY
-JajaWKuchni = TreeNode("Czy składane jaja wykorzystywane są przez człowieka w kuchni?", Fuzziness.LINEAR)
+JajaWKuchni = TreeNode("Czy składane jaja wykorzystywane są przez człowieka w kuchni?", Fuzziness.SIGMOIDAL)
 JajaWKuchni.insertLeft(SkladaneDuzeJaja)
 JajaWKuchni.insertRight(kiwi)
 
@@ -155,7 +155,7 @@ ZimnyKlimat.insertLeft(PolkulaPolnoca)
 ZimnyKlimat.insertRight(JajaWKuchni)
 
 #FUZZY
-UzywanaWKuchni = TreeNode("Czy jest używana w kuchni", Fuzziness.LINEAR)
+UzywanaWKuchni = TreeNode("Czy jest używana w kuchni", Fuzziness.SIGMOIDAL)
 UzywanaWKuchni.insertLeft(Slodkowodna)
 UzywanaWKuchni.insertRight(Kolce)
 
@@ -191,3 +191,34 @@ Ptak.insertRight(Ryba)
 Ssak = TreeNode("Czy jest ssakiem?", Fuzziness.NO)
 Ssak.insertLeft(Kot)
 Ssak.insertRight(Ptak)
+
+ToCheck = []
+ToCheck.append(Ssak)
+
+while len(ToCheck) != 0:
+    CurrentQuestion = ToCheck.pop()
+    while True:
+        if CurrentQuestion.getLeftChild() is None and CurrentQuestion.getRightChild() is None:
+            print("Odpowiedź: {0}".format(CurrentQuestion.getEtiquette()))
+            break
+
+        print(CurrentQuestion.getEtiquette())
+        question = CurrentQuestion.getQuestions()
+        print(question[0])
+        answer = int(input("Podaj odpowiedź"))
+
+        if answer not in question[1]:
+            break
+        else:
+            print(question[2][answer-1])
+
+        if question[2][answer-1] > 50:
+            if question[2][answer-1] != 100 and not CurrentQuestion.getRightChild() is None:
+                print("Do sprawdzenia: ", CurrentQuestion.getRightChild().getEtiquette())
+                ToCheck.append(CurrentQuestion.getRightChild())
+            CurrentQuestion = CurrentQuestion.getLeftChild()
+        else:
+            if question[2][answer-1] != 0 and not CurrentQuestion.getLeftChild() is None:
+                print("Do sprawdzenia: ", CurrentQuestion.getLefttChild().getEtiquette())
+                ToCheck.append(CurrentQuestion.getLeftChild())
+            CurrentQuestion = CurrentQuestion.getRightChild()

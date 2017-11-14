@@ -4,4 +4,4 @@ class Fuzziness(Enum):
     LEAF = 1
     NO = 2
     LINEAR = 3
-    FUZZINESS2 = 4
+    SIGMOIDAL = 4
